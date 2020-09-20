@@ -14,7 +14,8 @@ function preload()
 function setup() {
 	createCanvas(800, 700);
 	rectMode(CENTER);
-	
+	engine = Engine.create();
+	world = engine.world;
 
 	packageSprite=createSprite(width/2, 80, 10,10);
 	packageSprite.addImage(packageIMG)
@@ -24,27 +25,24 @@ function setup() {
 	helicopterSprite.addImage(helicopterIMG)
 	helicopterSprite.scale=0.6
 
-	groundSprite=createSprite(width/2, height-35, width,10);
-	groundSprite.shapeColor=color(255)
+	
 
-	bottomSprite=createSprite(400,650,120,20)
-    bottomSprite.shapeColor=color("red")
-	leftSprite=createSprite(340,610,20,100)
-    leftSprite.shapeColor=color("red")
-	rightSprite=createSprite(460,610,20,100)
-    rightSprite.shapeColor=color("red")
-	engine = Engine.create();
-	world = engine.world;
+	bottomSprite= new Box(400,650,120,20)
+    
+	leftSprite=new Box(340,610,20,100)
 
-	packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:0, isStatic:true});
-	World.add(world, packageBody);
+	rightSprite=new Box(460,610,20,100)
+ 
+	
+
+	
+	
 	
 
 	//Create a Ground
-	ground = Bodies.rectangle(width/2, 650, width, 10 , {isStatic:true} );
- 	World.add(world, ground);
+	ground = new Ground(width/2, 650, width, 10 );
 
-
+    packageBody = new Package(width/2 , 200 , 20,20);
 	Engine.run(engine);
   
 }
@@ -53,15 +51,20 @@ function setup() {
 function draw() {
   rectMode(CENTER);
   background(0);
-  packageSprite.x= packageBody.position.x 
-  packageSprite.y= packageBody.position.y 
+  packageSprite.x= packageBody.body.position.x
+  packageSprite.y= packageBody.body.position.y 
   drawSprites();
- 
+  bottomSprite.display()
+  leftSprite.display()
+  rightSprite.display()
+  ground.display()
+  packageBody.display()
+
 }
 
 function keyPressed() {
  if (keyCode === DOWN_ARROW) {
-	Matter.Body.setStatic(packageBody, false);
+	Matter.Body.setStatic(packageBody.body, false);
     
   }
 }
